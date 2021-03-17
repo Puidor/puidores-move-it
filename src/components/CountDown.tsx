@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ChallengesContext } from "../contexts/ChallengesContext";
 import styles from "../styles/components/CountDown.module.css";
 
 let countdownTimeout: NodeJS.Timeout;
 
 export function CountDown() {
-  const [time, setTime] = useState(25 * 60); // UseState do Contador para 25 minutos
+  const { startNewChallenge } = useContext(ChallengesContext);
+
+  const [time, setTime] = useState(0.1 * 60); // UseState do Contador para 25 minutos
   const [isActive, setIsActive] = useState(false); // Verifica se o contador está ativo
   const [hasFinished, setHasFinished] = useState(false);
 
@@ -28,7 +31,7 @@ export function CountDown() {
   function resetCountdown() {
     clearTimeout(countdownTimeout);
     setIsActive(false);
-    setTime(25 * 60);
+    setTime(0.1 * 60);
   }
 
   //=> useEffect -> contagem regressiva
@@ -44,6 +47,7 @@ export function CountDown() {
     } else if (isActive && time === 0) {
       setHasFinished(true);
       setIsActive(false);
+      startNewChallenge();
     }
   }, [isActive, time]);
 
