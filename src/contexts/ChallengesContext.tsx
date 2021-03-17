@@ -1,6 +1,7 @@
-import { createContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useState, ReactNode, useEffect } from "react";
 import Cookies from "js-cookie";
 import challenges from "../../challenges.json";
+import { LevelUpModal } from "../components/LevelUpModal";
 
 // Definindo Tipagem
 interface Challenge {
@@ -20,6 +21,7 @@ interface ChallengesContextData {
   startNewChallenge: () => void;
   resetChallenge: () => void;
   completeChallenge: () => void;
+  closeLevelModal: () => void;
 }
 
 // Definindo Tipagem
@@ -46,6 +48,8 @@ export function ChallengesProvider({
   );
   const [activeChallenge, setActiveChallenge] = useState(null);
 
+  const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false);
+
   //Calculo RPG para cálculo da exp para próximo level
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
 
@@ -63,6 +67,11 @@ export function ChallengesProvider({
 
   function levelUp() {
     setLevel(level + 1);
+    setIsLevelUpModalOpen(true);
+  }
+
+  function closeLevelModal() {
+    setIsLevelUpModalOpen(false);
   }
 
   function startNewChallenge() {
@@ -116,9 +125,11 @@ export function ChallengesProvider({
         activeChallenge,
         resetChallenge,
         completeChallenge,
+        closeLevelModal,
       }}
     >
       {children}
+      {isLevelUpModalOpen && <LevelUpModal />}
     </ChallengesContext.Provider>
   );
 }
